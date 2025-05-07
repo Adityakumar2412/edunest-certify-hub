@@ -30,60 +30,11 @@ export function CourseProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulating API fetch with mock data
-    const mockCourses: Course[] = [
-      {
-        id: "javascript-basics",
-        title: "JavaScript Fundamentals",
-        description: "Learn the basics of JavaScript programming language including variables, data types, functions, and control flow.",
-        language: "JavaScript",
-        image: "/placeholder.svg",
-        quiz: generateQuestions("JavaScript")
-      },
-      {
-        id: "python-basics",
-        title: "Python for Beginners",
-        description: "Start your programming journey with Python, one of the most popular and beginner-friendly programming languages.",
-        language: "Python",
-        image: "/placeholder.svg",
-        quiz: generateQuestions("Python")
-      },
-      {
-        id: "html-css",
-        title: "HTML & CSS Essentials",
-        description: "Build the foundation of web development with HTML structure and CSS styling techniques.",
-        language: "HTML/CSS",
-        image: "/placeholder.svg",
-        quiz: generateQuestions("HTML/CSS")
-      },
-      {
-        id: "java-programming",
-        title: "Java Programming",
-        description: "Master object-oriented programming with Java, a versatile language for desktop, web, and mobile applications.",
-        language: "Java",
-        image: "/placeholder.svg",
-        quiz: generateQuestions("Java")
-      },
-      {
-        id: "react-fundamentals",
-        title: "React Fundamentals",
-        description: "Learn to build interactive user interfaces with React, a popular JavaScript library.",
-        language: "React",
-        image: "/placeholder.svg",
-        quiz: generateQuestions("React")
-      },
-      {
-        id: "cpp-programming",
-        title: "C++ Programming",
-        description: "Get started with C++, a powerful language used for systems programming, game development, and more.",
-        language: "C++",
-        image: "/placeholder.svg",
-        quiz: generateQuestions("C++")
-      }
-    ];
-
+    // Generate 500+ courses
+    const generatedCourses: Course[] = generateManyCourses(520);
+    
     setTimeout(() => {
-      setCourses(mockCourses);
+      setCourses(generatedCourses);
       setLoading(false);
     }, 1000);
   }, []);
@@ -107,7 +58,156 @@ export const useCourses = () => {
   return context;
 };
 
-// Helper function to generate random questions for each course
+// Helper function to generate a large number of courses
+function generateManyCourses(count: number): Course[] {
+  const languages = [
+    { name: "JavaScript", category: "Web Development" },
+    { name: "Python", category: "Data Science" },
+    { name: "HTML/CSS", category: "Web Development" },
+    { name: "Java", category: "Software Development" },
+    { name: "React", category: "Frontend" },
+    { name: "C++", category: "Software Development" },
+    { name: "PHP", category: "Web Development" },
+    { name: "Ruby", category: "Web Development" },
+    { name: "Swift", category: "Mobile Development" },
+    { name: "Kotlin", category: "Mobile Development" },
+    { name: "Go", category: "Backend Development" },
+    { name: "Rust", category: "Systems Programming" },
+    { name: "TypeScript", category: "Web Development" },
+    { name: "C#", category: "Software Development" },
+    { name: "SQL", category: "Database" },
+    { name: "MongoDB", category: "NoSQL Database" },
+    { name: "Angular", category: "Frontend" },
+    { name: "Vue.js", category: "Frontend" },
+    { name: "Node.js", category: "Backend Development" },
+    { name: "Django", category: "Web Framework" },
+    { name: "Flask", category: "Web Framework" },
+    { name: "Spring Boot", category: "Java Framework" },
+    { name: "Docker", category: "DevOps" },
+    { name: "Kubernetes", category: "DevOps" },
+    { name: "AWS", category: "Cloud Computing" },
+    { name: "Azure", category: "Cloud Computing" },
+    { name: "GCP", category: "Cloud Computing" },
+    { name: "TensorFlow", category: "Machine Learning" },
+    { name: "PyTorch", category: "Machine Learning" },
+    { name: "Blockchain", category: "Distributed Systems" }
+  ];
+  
+  const levels = ["Beginner", "Intermediate", "Advanced", "Expert"];
+  
+  const titlePrefixes = [
+    "Complete Guide to", "Introduction to", "Mastering", "Advanced", "Professional",
+    "Hands-On", "Practical", "Essential", "Modern", "Ultimate", "Comprehensive",
+    "Fundamentals of", "Building with", "Exploring", "Deep Dive into", "Jumpstart",
+    "Quick Start", "Pro", "Zero to Hero in", "Accelerated"
+  ];
+  
+  const descriptionTemplates = [
+    "Learn {language} from scratch and become proficient in building applications. This {level} course covers everything you need to know.",
+    "Master {language} programming with this {level} course designed for {category} enthusiasts.",
+    "Become a {language} expert with our comprehensive {level} curriculum tailored for {category}.",
+    "Dive into {language} and learn how to create powerful {category} applications in this {level} course.",
+    "Accelerate your career with this {level} {language} course focused on real-world {category} projects.",
+    "From basic concepts to advanced techniques, this {level} {language} course will transform you into a {category} professional.",
+    "Build practical {category} applications using {language} in this hands-on {level} course.",
+    "Understand the core principles of {language} and how to apply them in {category} with this {level} training.",
+    "This {level} {language} course will teach you industry-standard approaches to solving {category} challenges.",
+    "Expand your skillset with our {level} {language} course, perfect for anyone interested in {category} development."
+  ];
+
+  const courses: Course[] = [];
+  
+  // Add the original 6 courses first
+  const originalCourses: Course[] = [
+    {
+      id: "javascript-basics",
+      title: "JavaScript Fundamentals",
+      description: "Learn the basics of JavaScript programming language including variables, data types, functions, and control flow.",
+      language: "JavaScript",
+      image: "/placeholder.svg",
+      quiz: generateQuestions("JavaScript")
+    },
+    {
+      id: "python-basics",
+      title: "Python for Beginners",
+      description: "Start your programming journey with Python, one of the most popular and beginner-friendly programming languages.",
+      language: "Python",
+      image: "/placeholder.svg",
+      quiz: generateQuestions("Python")
+    },
+    {
+      id: "html-css",
+      title: "HTML & CSS Essentials",
+      description: "Build the foundation of web development with HTML structure and CSS styling techniques.",
+      language: "HTML/CSS",
+      image: "/placeholder.svg",
+      quiz: generateQuestions("HTML/CSS")
+    },
+    {
+      id: "java-programming",
+      title: "Java Programming",
+      description: "Master object-oriented programming with Java, a versatile language for desktop, web, and mobile applications.",
+      language: "Java",
+      image: "/placeholder.svg",
+      quiz: generateQuestions("Java")
+    },
+    {
+      id: "react-fundamentals",
+      title: "React Fundamentals",
+      description: "Learn to build interactive user interfaces with React, a popular JavaScript library.",
+      language: "React",
+      image: "/placeholder.svg",
+      quiz: generateQuestions("React")
+    },
+    {
+      id: "cpp-programming",
+      title: "C++ Programming",
+      description: "Get started with C++, a powerful language used for systems programming, game development, and more.",
+      language: "C++",
+      image: "/placeholder.svg",
+      quiz: generateQuestions("C++")
+    }
+  ];
+  
+  courses.push(...originalCourses);
+  
+  // Generate remaining courses to reach the desired count
+  for (let i = originalCourses.length; i < count; i++) {
+    const langIndex = i % languages.length;
+    const language = languages[langIndex];
+    const level = levels[Math.floor(Math.random() * levels.length)];
+    const prefix = titlePrefixes[Math.floor(Math.random() * titlePrefixes.length)];
+    
+    // For variation, sometimes add the level to the title
+    const includeLevel = Math.random() > 0.5;
+    const title = includeLevel 
+      ? `${prefix} ${language.name} - ${level}`
+      : `${prefix} ${language.name}`;
+    
+    // Select and fill a description template
+    const descTemplate = descriptionTemplates[Math.floor(Math.random() * descriptionTemplates.length)];
+    const description = descTemplate
+      .replace('{language}', language.name)
+      .replace('{level}', level.toLowerCase())
+      .replace('{category}', language.category);
+    
+    // Create a URL-friendly ID
+    const id = `${language.name.toLowerCase().replace(/[/\s#]/g, '-')}-${i}`;
+    
+    courses.push({
+      id,
+      title,
+      description,
+      language: language.name,
+      image: "/placeholder.svg",
+      quiz: generateQuestions(language.name)
+    });
+  }
+  
+  return courses;
+}
+
+// Helper function to generate questions for each course
 function generateQuestions(language: string): Question[] {
   const questions: Record<string, Question[]> = {
     "JavaScript": [
