@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Course } from "@/contexts/CourseContext";
-import { Download, FilePdf } from "lucide-react";
+import { FileText } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -55,7 +55,8 @@ const Certificate = ({ course, score }: CertificateProps) => {
       toast({
         title: "Download successful!",
         description: "Your certificate has been downloaded.",
-        variant: "success",
+        // Changed from "success" to "default" as the variant options are limited
+        variant: "default",
       });
     } catch (error) {
       console.error("Failed to generate PDF:", error);
@@ -73,7 +74,7 @@ const Certificate = ({ course, score }: CertificateProps) => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-4 flex justify-end">
         <Button onClick={handleDownload} className="flex items-center gap-2">
-          <FilePdf size={18} />
+          <FileText size={18} />
           Download Certificate (PDF)
         </Button>
       </div>
