@@ -55,7 +55,7 @@ const Certificate = ({ course, score }: CertificateProps) => {
               {course.title}
             </span>
             <br />
-            with a score of <span className="font-bold">{score}%</span>
+            with a score of <span className="font-bold text-green-600">{score}%</span>
           </p>
         </div>
 

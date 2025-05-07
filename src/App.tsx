@@ -14,6 +14,7 @@ import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import AuthRequired from "./components/AuthRequired";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,11 @@ const App = () => (
               <Route path="/signup" element={<Signup />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/courses/:id" element={<CourseDetail />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={
+                <AuthRequired>
+                  <Dashboard />
+                </AuthRequired>
+              } />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
