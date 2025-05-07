@@ -3,7 +3,10 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Course } from "@/contexts/CourseContext";
-import { Download } from "lucide-react";
+import { Download, FilePdf } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 interface CertificateProps {
   course: Course;
@@ -13,16 +16,55 @@ interface CertificateProps {
 const Certificate = ({ course, score }: CertificateProps) => {
   const { user } = useAuth();
   const certificateRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
   const currentDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
-  const handleDownload = () => {
-    // This is a placeholder for certificate download
-    // In a real app, we would use html2canvas or similar to generate a PDF
-    alert("Certificate download functionality would be implemented here with a proper PDF generation library.");
+  const handleDownload = async () => {
+    if (!certificateRef.current) return;
+    
+    toast({
+      title: "Preparing certificate...",
+      description: "Please wait while we generate your PDF.",
+    });
+    
+    try {
+      // Capture the certificate div as an image
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 2, // Higher scale for better quality
+        logging: false,
+        useCORS: true,
+        backgroundColor: "#ffffff"
+      });
+      
+      // Convert to PDF
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      
+      // Download the PDF
+      pdf.save(`${user?.name}-${course.title}-Certificate.pdf`);
+      
+      toast({
+        title: "Download successful!",
+        description: "Your certificate has been downloaded.",
+        variant: "success",
+      });
+    } catch (error) {
+      console.error("Failed to generate PDF:", error);
+      toast({
+        title: "Download failed",
+        description: "There was a problem downloading your certificate. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (!user) return null;
@@ -31,8 +73,8 @@ const Certificate = ({ course, score }: CertificateProps) => {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-4 flex justify-end">
         <Button onClick={handleDownload} className="flex items-center gap-2">
-          <Download size={18} />
-          Download Certificate
+          <FilePdf size={18} />
+          Download Certificate (PDF)
         </Button>
       </div>
 
