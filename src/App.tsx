@@ -10,9 +10,11 @@ import { CourseProvider } from "@/contexts/CourseContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import AuthRequired from "./components/AuthRequired";
 
@@ -30,8 +32,14 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/courses" element={<Courses />} />
               <Route path="/courses/:id" element={<CourseDetail />} />
+              <Route path="/profile" element={
+                <AuthRequired>
+                  <Profile />
+                </AuthRequired>
+              } />
               <Route path="/dashboard" element={
                 <AuthRequired>
                   <Dashboard />

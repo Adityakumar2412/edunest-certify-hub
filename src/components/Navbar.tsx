@@ -2,10 +2,21 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogIn, LogOut } from "lucide-react";
+import { LogIn, LogOut, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
+
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map(part => part[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 py-4 shadow-sm">
@@ -25,10 +36,21 @@ const Navbar = () => {
           )}
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
-              <span className="text-gray-700">Welcome, {user?.name}</span>
+              <Link to="/profile" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
+                <Avatar className="h-8 w-8">
+                  {user?.profilePicture ? (
+                    <AvatarImage src={user.profilePicture} alt={user.name} />
+                  ) : (
+                    <AvatarFallback className="bg-blue-100 text-blue-800 text-xs">
+                      {getInitials(user?.name)}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <span className="hidden md:inline">{user?.name}</span>
+              </Link>
               <Button variant="outline" onClick={logout} className="flex items-center gap-2">
                 <LogOut size={18} />
-                Logout
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </div>
           ) : (

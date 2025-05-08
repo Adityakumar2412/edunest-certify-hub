@@ -1,6 +1,5 @@
-
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface User {
   id: string;
@@ -9,6 +8,7 @@ interface User {
   enrolledCourses: string[];
   completedQuizzes: Record<string, number>;
   certificates: string[];
+  profilePicture?: string;
 }
 
 interface AuthContextType {
@@ -21,6 +21,9 @@ interface AuthContextType {
   enrollInCourse: (courseId: string) => void;
   saveQuizResult: (courseId: string, score: number) => void;
   addCertificate: (courseId: string) => void;
+  updateProfile: (data: Partial<User>) => Promise<boolean>;
+  resetPassword: (email: string) => Promise<boolean>;
+  changePassword: (oldPassword: string, newPassword: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,6 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Mock user database
   const users = JSON.parse(localStorage.getItem('educationCentreUsers') || '[]');
+
+  const updateUsersInLocalStorage = (updatedUsers: any[]) => {
+    localStorage.setItem('educationCentreUsers', JSON.stringify(updatedUsers));
+  };
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
@@ -210,6 +217,114 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('educationCentreUsers', JSON.stringify(updatedUsers));
   };
 
+  // New function to update user profile
+  const updateProfile = async (data: Partial<User>): Promise<boolean> => {
+    setIsLoading(true);
+    
+    if (!user) {
+      setIsLoading(false);
+      return false;
+    }
+    
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Update user in state
+      const updatedUser = { ...user, ...data };
+      setUser(updatedUser);
+      
+      // Update user in "database"
+      const updatedUsers = users.map((u: any) => 
+        u.id === user.id ? { ...u, ...data } : u
+      );
+      updateUsersInLocalStorage(updatedUsers);
+      
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully",
+      });
+      
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description: "There was a problem updating your profile",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return false;
+    }
+  };
+
+  // New function to request password reset
+  const resetPassword = async (email: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const userExists = users.some((u: any) => u.email === email);
+    
+    if (userExists) {
+      // In a real app, this would send an email
+      toast({
+        title: "Password reset link sent",
+        description: "If an account exists with this email, you will receive a password reset link",
+      });
+      setIsLoading(false);
+      return true;
+    } else {
+      // For security reasons, don't reveal if email exists or not
+      toast({
+        title: "Password reset link sent",
+        description: "If an account exists with this email, you will receive a password reset link",
+      });
+      setIsLoading(false);
+      return false;
+    }
+  };
+
+  // New function to change password
+  const changePassword = async (oldPassword: string, newPassword: string): Promise<boolean> => {
+    setIsLoading(true);
+    
+    if (!user) {
+      setIsLoading(false);
+      return false;
+    }
+    
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Find user in "database" and check old password
+    const userIndex = users.findIndex((u: any) => u.id === user.id);
+    
+    if (userIndex === -1 || users[userIndex].password !== oldPassword) {
+      toast({
+        title: "Password change failed",
+        description: "Current password is incorrect",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+      return false;
+    }
+    
+    // Update password in "database"
+    const updatedUsers = [...users];
+    updatedUsers[userIndex] = { ...updatedUsers[userIndex], password: newPassword };
+    updateUsersInLocalStorage(updatedUsers);
+    
+    toast({
+      title: "Password changed",
+      description: "Your password has been updated successfully",
+    });
+    
+    setIsLoading(false);
+    return true;
+  };
+
   return (
     <AuthContext.Provider value={{ 
       user, 
@@ -221,6 +336,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       enrollInCourse,
       saveQuizResult,
       addCertificate,
+      updateProfile,
+      resetPassword,
+      changePassword,
     }}>
       {children}
     </AuthContext.Provider>
